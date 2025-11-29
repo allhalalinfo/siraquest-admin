@@ -2,15 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getSupabase } from '@/lib/supabase'
-import { HelpCircle, BookOpen, Layers, Library } from 'lucide-react'
 import Link from 'next/link'
-
-interface Stats {
-  questions: number
-  topics: number
-  levels: number
-  sources: number
-}
 
 interface TopicCount {
   id: number
@@ -19,7 +11,9 @@ interface TopicCount {
 }
 
 export default function Dashboard() {
-  const [stats, setStats] = useState<Stats>({ questions: 0, topics: 0, levels: 0, sources: 0 })
+  const [totalQuestions, setTotalQuestions] = useState(0)
+  const [totalGroups, setTotalGroups] = useState(0)
+  const [totalSources, setTotalSources] = useState(0)
   const [topicCounts, setTopicCounts] = useState<TopicCount[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -30,19 +24,15 @@ export default function Dashboard() {
   async function loadData() {
     try {
       const supabase = getSupabase()
-      const [questionsRes, groupsRes, levelsRes, sourcesRes] = await Promise.all([
+      const [questionsRes, groupsRes, sourcesRes] = await Promise.all([
         supabase.from('questions').select('group_id', { count: 'exact' }),
         supabase.from('quiz_groups').select('*').order('order'),
-        supabase.from('quiz_levels').select('*', { count: 'exact' }),
         supabase.from('sources').select('*', { count: 'exact' }),
       ])
 
-      setStats({
-        questions: questionsRes.count || 0,
-        topics: groupsRes.data?.length || 0,
-        levels: levelsRes.count || 0,
-        sources: sourcesRes.count || 0,
-      })
+      setTotalQuestions(questionsRes.count || 0)
+      setTotalGroups(groupsRes.data?.length || 0)
+      setTotalSources(sourcesRes.count || 0)
 
       // Count questions per topic
       const counts: { [key: number]: number } = {}
@@ -64,75 +54,54 @@ export default function Dashboard() {
     }
   }
 
-  const statCards = [
-    { label: 'Вопросов', value: stats.questions, icon: HelpCircle, href: '/questions' },
-    { label: 'Тем', value: stats.topics, icon: BookOpen, href: '/topics' },
-    { label: 'Уровней', value: stats.levels, icon: Layers, href: '/levels' },
-    { label: 'Источников', value: stats.sources, icon: Library, href: '/sources' },
-  ]
-
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-gray-400">Загрузка...</div>
-      </div>
-    )
+    return <div className="loading">Загрузка...</div>
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div>
-        <h1 className="font-serif text-3xl font-medium text-white italic">
-          Панель управления
-        </h1>
-        <p className="text-gray-400 mt-2">Обзор данных викторины</p>
+    <>
+      <div className="section-header">
+        <h1>Панель управления</h1>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((card) => {
-          const Icon = card.icon
-          return (
-            <Link key={card.label} href={card.href}>
-              <div className="glass-card glass-card-hover p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <Icon className="text-teal-400" size={24} />
-                </div>
-                <div className="font-serif text-4xl font-semibold text-gold-500 mb-1">
-                  {card.value}
-                </div>
-                <div className="text-sm text-gray-400 uppercase tracking-wider">
-                  {card.label}
-                </div>
-              </div>
-            </Link>
-          )
-        })}
+      <div className="stats-grid">
+        <Link href="/questions" className="stat-card">
+          <div className="stat-value">{totalQuestions}</div>
+          <div className="stat-label">Вопросов</div>
+        </Link>
+        <div className="stat-card">
+          <div className="stat-value">{totalGroups}</div>
+          <div className="stat-label">Тем</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{totalSources}</div>
+          <div className="stat-label">Источников</div>
+        </div>
       </div>
 
-      {/* Topics Distribution */}
-      <div className="glass-card">
-        <div className="px-6 py-4 border-b border-white/10">
-          <h2 className="font-serif text-xl text-white">Распределение по темам</h2>
+      <div className="card">
+        <div className="card-header">
+          <h2>Распределение по темам</h2>
         </div>
-        <div className="p-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {topicCounts.map((topic) => (
-              <Link key={topic.id} href={`/questions?topic=${topic.id}`}>
-                <div className="bg-dark-600/40 border border-white/5 rounded-xl p-4 hover:bg-dark-500/50 hover:border-teal-500/20 transition-all cursor-pointer">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-300">{topic.title}</span>
-                    <span className="font-serif text-xl font-semibold text-gold-500">
-                      {topic.count}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+        <div className="card-body">
+          {topicCounts.length === 0 ? (
+            <div className="empty-state">Нет тем</div>
+          ) : (
+            <div className="topics-grid">
+              {topicCounts.map((topic) => (
+                <Link
+                  key={topic.id}
+                  href={`/questions?group=${topic.id}`}
+                  className="topic-card"
+                >
+                  <span className="topic-name">{topic.title}</span>
+                  <span className="topic-count">{topic.count}</span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </>
   )
 }
