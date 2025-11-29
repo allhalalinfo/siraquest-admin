@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react'
 import { supabase, QuizGroup } from '@/lib/supabase'
 import { Pencil, Trash2 } from 'lucide-react'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function TopicsPage() {
   const [groups, setGroups] = useState<QuizGroup[]>([])
   const [loading, setLoading] = useState(true)
@@ -73,4 +76,3 @@ export default function TopicsPage() {
     </div>
   )
 }
-

@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react'
 import { supabase, Source } from '@/lib/supabase'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export default function SourcesPage() {
   const [sources, setSources] = useState<Source[]>([])
   const [loading, setLoading] = useState(true)
@@ -79,4 +82,3 @@ export default function SourcesPage() {
     </div>
   )
 }
-

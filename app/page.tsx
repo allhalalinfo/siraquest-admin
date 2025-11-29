@@ -5,6 +5,9 @@ import { supabase } from '@/lib/supabase'
 import { HelpCircle, BookOpen, Layers, Library } from 'lucide-react'
 import Link from 'next/link'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 interface Stats {
   questions: number
   topics: number
@@ -135,4 +138,3 @@ export default function Dashboard() {
     </div>
   )
 }
-

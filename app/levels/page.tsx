@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase, QuizLevel, QuizGroup } from '@/lib/supabase'
+import { supabase, QuizLevel } from '@/lib/supabase'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export default function LevelsPage() {
   const [levels, setLevels] = useState<(QuizLevel & { quiz_groups?: { title: string } })[]>([])
@@ -62,4 +65,3 @@ export default function LevelsPage() {
     </div>
   )
 }
-

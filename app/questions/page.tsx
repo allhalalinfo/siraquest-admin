@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { supabase, Question, QuizGroup, Answer } from '@/lib/supabase'
-import { Plus, Pencil, Trash2, ChevronDown, ChevronUp, Search, Download } from 'lucide-react'
+import { Plus, Pencil, Trash2, ChevronDown, ChevronUp, Search } from 'lucide-react'
 import QuestionModal from '@/components/QuestionModal'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState<Question[]>([])
@@ -281,4 +284,3 @@ export default function QuestionsPage() {
     </div>
   )
 }
-
