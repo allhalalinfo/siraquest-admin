@@ -301,9 +301,9 @@ function QuestionsContent() {
                 <div className="question-text">{q.text}</div>
 
                 <div className="question-meta">
-                  <span>📚 {q.quiz_groups?.title || '—'}</span>
-                  <span>📊 {q.quiz_levels?.title || '—'}</span>
-                  <span>📖 {q.sources?.title || '—'}</span>
+                  <span>{q.quiz_groups?.title || '—'}</span>
+                  <span>{q.quiz_levels?.title || '—'}</span>
+                  {q.sources?.title && <span>{q.sources.title}</span>}
                 </div>
 
                 {/* Expanded Details */}
