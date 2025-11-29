@@ -78,7 +78,7 @@ function QuestionsContent() {
         supabase
           .from('questions')
           .select('*, quiz_groups(title), quiz_levels(title), sources(title)')
-          .order('id', { ascending: false }),
+          .order('id', { ascending: true }),
         supabase.from('quiz_groups').select('*').order('order'),
         supabase.from('quiz_levels').select('*').order('group_id').order('order'),
       ])
@@ -132,16 +132,6 @@ function QuestionsContent() {
       if (data) {
         setAnswers((prev) => ({ ...prev, [id]: data }))
       }
-    }
-  }
-
-  async function deleteQuestion(id: number) {
-    if (!confirm('Удалить этот вопрос?')) return
-
-    const supabase = getSupabase()
-    const { error } = await supabase.from('questions').delete().eq('id', id)
-    if (!error) {
-      setQuestions((prev) => prev.filter((q) => q.id !== id))
     }
   }
 
@@ -263,7 +253,7 @@ function QuestionsContent() {
           <div className="empty-state">Вопросы не найдены</div>
         ) : (
           pageQuestions.map((q, idx) => {
-            const num = filteredQuestions.length - startIdx - idx
+            const num = startIdx + idx + 1
             const isExpanded = expandedId === q.id
             const qAnswers = answers[q.id] || []
             const letters = ['A', 'B', 'C', 'D']
@@ -286,13 +276,6 @@ function QuestionsContent() {
                       title="Редактировать"
                     >
                       ✎
-                    </button>
-                    <button
-                      className="btn-icon delete"
-                      onClick={() => deleteQuestion(q.id)}
-                      title="Удалить"
-                    >
-                      ×
                     </button>
                   </div>
                 </div>
@@ -366,6 +349,10 @@ function QuestionsContent() {
           onClose={() => setModalOpen(false)}
           onSave={() => {
             loadData()
+            setModalOpen(false)
+          }}
+          onDelete={(id) => {
+            setQuestions((prev) => prev.filter((q) => q.id !== id))
             setModalOpen(false)
           }}
         />

@@ -32,13 +32,16 @@ interface Props {
   question: Question | null
   onClose: () => void
   onSave: () => void
+  onDelete?: (id: number) => void
 }
 
-export default function QuestionModal({ question, onClose, onSave }: Props) {
+export default function QuestionModal({ question, onClose, onSave, onDelete }: Props) {
   const [groups, setGroups] = useState<Group[]>([])
   const [levels, setLevels] = useState<Level[]>([])
   const [sources, setSources] = useState<Source[]>([])
   const [saving, setSaving] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   // Form state
   const [groupId, setGroupId] = useState<string>('')
@@ -51,7 +54,6 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
 
   useEffect(() => {
     loadFormData()
-    // Block body scroll
     document.body.classList.add('modal-open')
     return () => {
       document.body.classList.remove('modal-open')
@@ -121,7 +123,6 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
       let questionId: number
 
       if (question) {
-        // Update
         const { error } = await supabase
           .from('questions')
           .update(questionData)
@@ -130,17 +131,14 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
         if (error) throw error
         questionId = question.id
 
-        // Delete old answers
         await supabase.from('answers').delete().eq('question_id', questionId)
       } else {
-        // Insert
         const { data, error } = await supabase.from('questions').insert(questionData).select()
 
         if (error) throw error
         questionId = data[0].id
       }
 
-      // Insert answers
       const answersData = answers.map((txt, i) => ({
         question_id: questionId,
         text: txt.trim(),
@@ -159,6 +157,24 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
     }
   }
 
+  async function handleDelete() {
+    if (!question || !onDelete) return
+    
+    setDeleting(true)
+    try {
+      const supabase = getSupabase()
+      const { error } = await supabase.from('questions').delete().eq('id', question.id)
+      if (error) throw error
+      onDelete(question.id)
+      onClose()
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('Ошибка удаления')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   const filteredLevels = levels.filter((l) => l.group_id === parseInt(groupId))
 
   return (
@@ -166,7 +182,7 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
       <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h2>{question ? 'Редактировать вопрос' : 'Добавить вопрос'}</h2>
-          <button className="modal-close" onClick={onClose}>×</button>
+          <button className="modal-close" onClick={onClose} aria-label="Закрыть">×</button>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -283,8 +299,42 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
           </div>
 
           <div className="modal-footer">
+            {/* Delete button - only for editing existing questions */}
+            {question && onDelete && (
+              <div style={{ marginRight: 'auto' }}>
+                {!showDeleteConfirm ? (
+                  <button
+                    type="button"
+                    className="btn btn-delete"
+                    onClick={() => setShowDeleteConfirm(true)}
+                  >
+                    Удалить
+                  </button>
+                ) : (
+                  <div className="delete-confirm">
+                    <span className="delete-confirm-text">Удалить вопрос?</span>
+                    <button
+                      type="button"
+                      className="btn btn-delete-confirm"
+                      onClick={handleDelete}
+                      disabled={deleting}
+                    >
+                      {deleting ? '...' : 'Да'}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline"
+                      onClick={() => setShowDeleteConfirm(false)}
+                    >
+                      Нет
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+            
             <button type="button" className="btn btn-outline" onClick={onClose}>
-              Отмена
+              Закрыть
             </button>
             <button type="submit" className="btn btn-gold" disabled={saving}>
               {saving ? 'Сохранение...' : 'Сохранить'}

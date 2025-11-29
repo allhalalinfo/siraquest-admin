@@ -480,6 +480,42 @@ body {
     border-color: rgba(255, 107, 107, 0.3);
 }
 
+.btn-delete {
+    background: transparent;
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    color: #ff8888;
+    padding: 10px 16px;
+    font-size: 13px;
+}
+
+.btn-delete:hover {
+    background: rgba(255, 100, 100, 0.1);
+    border-color: rgba(255, 100, 100, 0.5);
+}
+
+.btn-delete-confirm {
+    background: #cc4444;
+    color: white;
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.btn-delete-confirm:hover {
+    background: #aa3333;
+}
+
+.delete-confirm {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.delete-confirm-text {
+    color: #ff8888;
+    font-size: 13px;
+    font-weight: 500;
+}
+
 /* ========================================
    Filters Bar
    ======================================== */
