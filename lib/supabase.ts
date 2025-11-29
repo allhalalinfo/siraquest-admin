@@ -25,8 +25,6 @@ export interface Question {
   group_id: number
   level_id: number
   source_id: number | null
-  author: string | null
-  notes: string | null
   created_at: string
   quiz_groups?: { title: string }
   quiz_levels?: { title: string }

@@ -12,8 +12,6 @@ interface Question {
   group_id: number
   level_id: number
   source_id: number | null
-  author: string | null
-  notes: string | null
   quiz_groups?: { title: string }
   quiz_levels?: { title: string }
   sources?: { title: string }
@@ -306,7 +304,6 @@ function QuestionsContent() {
                   <span>📚 {q.quiz_groups?.title || '—'}</span>
                   <span>📊 {q.quiz_levels?.title || '—'}</span>
                   <span>📖 {q.sources?.title || '—'}</span>
-                  {q.author && <span>👤 {q.author}</span>}
                 </div>
 
                 {/* Expanded Details */}

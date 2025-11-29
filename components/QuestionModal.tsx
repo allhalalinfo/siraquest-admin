@@ -10,8 +10,6 @@ interface Question {
   group_id: number
   level_id: number
   source_id: number | null
-  author: string | null
-  notes: string | null
 }
 
 interface Group {
@@ -50,8 +48,6 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
   const [correctAnswer, setCorrectAnswer] = useState(0)
   const [explanation, setExplanation] = useState('')
   const [sourceId, setSourceId] = useState<string>('')
-  const [author, setAuthor] = useState('')
-  const [notes, setNotes] = useState('')
 
   useEffect(() => {
     loadFormData()
@@ -64,8 +60,6 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
       setText(question.text)
       setExplanation(question.explanation || '')
       setSourceId(question.source_id ? String(question.source_id) : '')
-      setAuthor(question.author || '')
-      setNotes(question.notes || '')
       loadAnswers(question.id)
     }
   }, [question])
@@ -116,8 +110,6 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
         text: text.trim(),
         explanation: explanation.trim(),
         source_id: sourceId ? parseInt(sourceId) : null,
-        author: author.trim() || null,
-        notes: notes.trim() || null,
         difficulty: 'medium',
       }
 
@@ -270,41 +262,18 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Источник</label>
-                <select
-                  className="form-select"
-                  value={sourceId}
-                  onChange={(e) => setSourceId(e.target.value)}
-                >
-                  <option value="">Без источника</option>
-                  {sources.map((s) => (
-                    <option key={s.id} value={s.id}>{s.title}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Автор</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                  placeholder="Имя автора"
-                />
-              </div>
-            </div>
-
             <div className="form-group">
-              <label className="form-label">Заметки</label>
-              <textarea
-                className="form-textarea"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Внутренние заметки..."
-              />
+              <label className="form-label">Источник</label>
+              <select
+                className="form-select"
+                value={sourceId}
+                onChange={(e) => setSourceId(e.target.value)}
+              >
+                <option value="">Без источника</option>
+                {sources.map((s) => (
+                  <option key={s.id} value={s.id}>{s.title}</option>
+                ))}
+              </select>
             </div>
           </div>
 
