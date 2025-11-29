@@ -1,10 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase, QuizLevel } from '@/lib/supabase'
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
+import { getSupabase, QuizLevel } from '@/lib/supabase'
 
 export default function LevelsPage() {
   const [levels, setLevels] = useState<(QuizLevel & { quiz_groups?: { title: string } })[]>([])
@@ -15,6 +12,7 @@ export default function LevelsPage() {
   }, [])
 
   async function loadData() {
+    const supabase = getSupabase()
     const { data } = await supabase
       .from('quiz_levels')
       .select('*, quiz_groups(title)')

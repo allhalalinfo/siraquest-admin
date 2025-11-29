@@ -1,11 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase, Source } from '@/lib/supabase'
+import { getSupabase, Source } from '@/lib/supabase'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
 
 export default function SourcesPage() {
   const [sources, setSources] = useState<Source[]>([])
@@ -16,6 +13,7 @@ export default function SourcesPage() {
   }, [])
 
   async function loadData() {
+    const supabase = getSupabase()
     const { data } = await supabase
       .from('sources')
       .select('*')

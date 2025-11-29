@@ -1,11 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase, QuizGroup } from '@/lib/supabase'
+import { getSupabase, QuizGroup } from '@/lib/supabase'
 import { Pencil, Trash2 } from 'lucide-react'
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
 
 export default function TopicsPage() {
   const [groups, setGroups] = useState<QuizGroup[]>([])
@@ -16,6 +13,7 @@ export default function TopicsPage() {
   }, [])
 
   async function loadData() {
+    const supabase = getSupabase()
     const { data } = await supabase
       .from('quiz_groups')
       .select('*')

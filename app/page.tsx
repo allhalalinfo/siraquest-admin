@@ -1,12 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
 import { HelpCircle, BookOpen, Layers, Library } from 'lucide-react'
 import Link from 'next/link'
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
 
 interface Stats {
   questions: number
@@ -32,6 +29,7 @@ export default function Dashboard() {
 
   async function loadData() {
     try {
+      const supabase = getSupabase()
       const [questionsRes, groupsRes, levelsRes, sourcesRes] = await Promise.all([
         supabase.from('questions').select('group_id', { count: 'exact' }),
         supabase.from('quiz_groups').select('*').order('order'),

@@ -1,12 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase, Question, QuizGroup, Answer } from '@/lib/supabase'
+import { getSupabase, Question, QuizGroup, Answer } from '@/lib/supabase'
 import { Plus, Pencil, Trash2, ChevronDown, ChevronUp, Search } from 'lucide-react'
 import QuestionModal from '@/components/QuestionModal'
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic'
 
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState<Question[]>([])
@@ -34,6 +31,7 @@ export default function QuestionsPage() {
 
   async function loadData() {
     try {
+      const supabase = getSupabase()
       const [questionsRes, groupsRes] = await Promise.all([
         supabase
           .from('questions')
@@ -76,6 +74,7 @@ export default function QuestionsPage() {
     setExpandedId(id)
 
     if (!answers[id]) {
+      const supabase = getSupabase()
       const { data } = await supabase
         .from('answers')
         .select('*')
@@ -91,6 +90,7 @@ export default function QuestionsPage() {
   async function deleteQuestion(id: number) {
     if (!confirm('Удалить этот вопрос?')) return
 
+    const supabase = getSupabase()
     const { error } = await supabase.from('questions').delete().eq('id', id)
     if (!error) {
       setQuestions((prev) => prev.filter((q) => q.id !== id))

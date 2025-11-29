@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase, Question, QuizGroup, QuizLevel, Source } from '@/lib/supabase'
+import { getSupabase, Question, QuizGroup, QuizLevel, Source } from '@/lib/supabase'
 import { X } from 'lucide-react'
 
 interface Props {
@@ -48,6 +48,7 @@ export default function QuestionModal({ isOpen, onClose, question, onSave }: Pro
   }, [question])
 
   async function loadFormData() {
+    const supabase = getSupabase()
     const [groupsRes, levelsRes, sourcesRes] = await Promise.all([
       supabase.from('quiz_groups').select('*').order('order'),
       supabase.from('quiz_levels').select('*').order('group_id').order('order'),
@@ -60,6 +61,7 @@ export default function QuestionModal({ isOpen, onClose, question, onSave }: Pro
   }
 
   async function loadAnswers(questionId: number) {
+    const supabase = getSupabase()
     const { data } = await supabase
       .from('answers')
       .select('*')
@@ -96,6 +98,7 @@ export default function QuestionModal({ isOpen, onClose, question, onSave }: Pro
     setSaving(true)
 
     try {
+      const supabase = getSupabase()
       const questionData = {
         group_id: groupId as number,
         level_id: levelId as number,
@@ -334,4 +337,3 @@ export default function QuestionModal({ isOpen, onClose, question, onSave }: Pro
     </div>
   )
 }
-
