@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg-dark: #0d1a1a;
+  --bg-mid: #142626;
+  --bg-light: #1a3333;
+  --gold: #D9B08C;
+  --gold-light: #FFCB9A;
+  --teal: #4a9090;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(160deg, #0a1414 0%, #0d1a1a 40%, #142626 100%);
+  min-height: 100vh;
+}
+
+/* Glass Card */
+.glass-card {
+  @apply bg-dark-700/60 backdrop-blur-xl border border-white/10 rounded-2xl;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card-hover {
+  @apply transition-all duration-300;
+}
+
+.glass-card-hover:hover {
+  @apply bg-dark-600/70 border-teal-500/30;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Gold Button */
+.btn-gold {
+  @apply px-6 py-3 rounded-xl font-medium transition-all duration-200;
+  background: linear-gradient(135deg, #D9B08C, #c49a76);
+  color: #0d1a1a;
+}
+
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(217, 176, 140, 0.3);
+}
+
+/* Glass Button */
+.btn-glass {
+  @apply px-5 py-2.5 rounded-xl font-medium transition-all duration-200;
+  @apply bg-dark-600/50 border border-white/10 text-gray-300;
+}
+
+.btn-glass:hover {
+  @apply bg-dark-500/60 border-teal-500/30 text-white;
+}
+
+/* Form Inputs */
+.form-input {
+  @apply w-full px-4 py-3 rounded-xl transition-all duration-200;
+  @apply bg-dark-600/50 border border-white/10 text-white;
+  @apply placeholder:text-gray-500;
+}
+
+.form-input:focus {
+  @apply outline-none border-teal-500 ring-2 ring-teal-500/20;
+}
+
+/* Table */
+.data-table {
+  @apply w-full;
+}
+
+.data-table th {
+  @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider;
+  @apply text-gray-400 border-b border-white/10;
+}
+
+.data-table td {
+  @apply px-4 py-4 border-b border-white/5;
+}
+
+.data-table tbody tr {
+  @apply transition-colors duration-150;
+}
+
+.data-table tbody tr:hover {
+  @apply bg-white/5;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
