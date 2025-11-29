@@ -51,6 +51,11 @@ export default function QuestionModal({ question, onClose, onSave }: Props) {
 
   useEffect(() => {
     loadFormData()
+    // Block body scroll
+    document.body.classList.add('modal-open')
+    return () => {
+      document.body.classList.remove('modal-open')
+    }
   }, [])
 
   useEffect(() => {
