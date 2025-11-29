@@ -11,20 +11,18 @@ export default function MobileNav() {
 
   return (
     <nav className="mobile-nav">
-      <div className="mobile-nav-items">
+      <div className="mobile-nav-pill">
         <Link
           href="/"
-          className={`mobile-nav-item ${isHome ? 'active' : ''}`}
+          className={`mobile-nav-tab ${isHome ? 'active' : ''}`}
         >
-          <span className="mobile-nav-icon">◇</span>
-          <span>Панель</span>
+          Панель
         </Link>
         <Link
           href="/questions"
-          className={`mobile-nav-item ${isQuestions ? 'active' : ''}`}
+          className={`mobile-nav-tab ${isQuestions ? 'active' : ''}`}
         >
-          <span className="mobile-nav-icon">☰</span>
-          <span>Вопросы</span>
+          Вопросы
         </Link>
       </div>
     </nav>

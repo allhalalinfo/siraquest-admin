@@ -40,7 +40,6 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
   const [levels, setLevels] = useState<Level[]>([])
   const [sources, setSources] = useState<Source[]>([])
   const [saving, setSaving] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
   // Form state
@@ -159,6 +158,8 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
 
   async function handleDelete() {
     if (!question || !onDelete) return
+    
+    if (!confirm('Удалить этот вопрос?')) return
     
     setDeleting(true)
     try {
@@ -299,46 +300,25 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
           </div>
 
           <div className="modal-footer">
-            {/* Delete button - only for editing existing questions */}
             {question && onDelete && (
-              <div style={{ marginRight: 'auto' }}>
-                {!showDeleteConfirm ? (
-                  <button
-                    type="button"
-                    className="btn btn-delete"
-                    onClick={() => setShowDeleteConfirm(true)}
-                  >
-                    Удалить
-                  </button>
-                ) : (
-                  <div className="delete-confirm">
-                    <span className="delete-confirm-text">Удалить вопрос?</span>
-                    <button
-                      type="button"
-                      className="btn btn-delete-confirm"
-                      onClick={handleDelete}
-                      disabled={deleting}
-                    >
-                      {deleting ? '...' : 'Да'}
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-outline"
-                      onClick={() => setShowDeleteConfirm(false)}
-                    >
-                      Нет
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button
+                type="button"
+                className="btn btn-delete"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? 'Удаление...' : 'Удалить'}
+              </button>
             )}
             
-            <button type="button" className="btn btn-outline" onClick={onClose}>
-              Закрыть
-            </button>
-            <button type="submit" className="btn btn-gold" disabled={saving}>
-              {saving ? 'Сохранение...' : 'Сохранить'}
-            </button>
+            <div className="modal-footer-right">
+              <button type="button" className="btn btn-outline" onClick={onClose}>
+                Закрыть
+              </button>
+              <button type="submit" className="btn btn-gold" disabled={saving}>
+                {saving ? 'Сохранение...' : 'Сохранить'}
+              </button>
+            </div>
           </div>
         </form>
       </div>

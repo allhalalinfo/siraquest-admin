@@ -101,10 +101,10 @@ export default function Dashboard() {
     }
   }
 
-  const difficultyLabels: { [key: string]: string } = {
-    'easy': '🟢 Лёгкие',
-    'medium': '🟡 Средние',
-    'hard': '🔴 Сложные'
+  const difficultyLabels: { [key: string]: { label: string; className: string } } = {
+    'easy': { label: 'Лёгкие', className: 'difficulty-easy' },
+    'medium': { label: 'Средние', className: 'difficulty-medium' },
+    'hard': { label: 'Сложные', className: 'difficulty-hard' }
   }
 
   if (loading) {
@@ -146,7 +146,10 @@ export default function Dashboard() {
                 href={`/questions?difficulty=${d.difficulty}`}
                 className="topic-card"
               >
-                <span className="topic-name">{difficultyLabels[d.difficulty]}</span>
+                <span className="topic-name">
+                  <span className={`difficulty-dot ${difficultyLabels[d.difficulty].className}`}></span>
+                  {difficultyLabels[d.difficulty].label}
+                </span>
                 <span className="topic-count">{d.count}</span>
               </Link>
             ))}

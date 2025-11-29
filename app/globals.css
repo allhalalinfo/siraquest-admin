@@ -493,29 +493,6 @@ body {
     border-color: rgba(255, 100, 100, 0.5);
 }
 
-.btn-delete-confirm {
-    background: #cc4444;
-    color: white;
-    padding: 8px 16px;
-    font-size: 13px;
-}
-
-.btn-delete-confirm:hover {
-    background: #aa3333;
-}
-
-.delete-confirm {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.delete-confirm-text {
-    color: #ff8888;
-    font-size: 13px;
-    font-weight: 500;
-}
-
 /* ========================================
    Filters Bar
    ======================================== */
@@ -850,10 +827,39 @@ body.modal-open {
 
 .modal-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     gap: 12px;
     padding: 20px 28px;
     border-top: 1px solid var(--border-glass);
+}
+
+.modal-footer-right {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.btn-delete {
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+    background: rgba(248, 113, 113, 0.2);
+    border-color: rgba(248, 113, 113, 0.5);
+}
+
+.btn-delete:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ========================================
@@ -1012,7 +1018,35 @@ body.modal-open {
 }
 
 /* ========================================
-   Mobile Navigation
+   Difficulty Dots
+   ======================================== */
+
+.difficulty-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.difficulty-dot.difficulty-easy {
+    background: #4ade80;
+    box-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+}
+
+.difficulty-dot.difficulty-medium {
+    background: #fbbf24;
+    box-shadow: 0 0 6px rgba(251, 191, 36, 0.5);
+}
+
+.difficulty-dot.difficulty-hard {
+    background: #f87171;
+    box-shadow: 0 0 6px rgba(248, 113, 113, 0.5);
+}
+
+/* ========================================
+   Mobile Navigation — Pill Style
    ======================================== */
 
 .mobile-nav {
@@ -1021,44 +1055,42 @@ body.modal-open {
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--bg-card);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border-top: 1px solid var(--border-glass);
     padding: 12px 20px;
     padding-bottom: calc(12px + env(safe-area-inset-bottom));
     z-index: 100;
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to top, rgba(15, 20, 18, 0.95) 0%, transparent 100%);
 }
 
-.mobile-nav-items {
+.mobile-nav-pill {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 8px;
-}
-
-.mobile-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: var(--bg-card);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid var(--border-glass);
+    border-radius: 100px;
+    padding: 4px;
     gap: 4px;
-    padding: 8px 16px;
+    max-width: 280px;
+    margin: 0 auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.mobile-nav-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 20px;
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
-    border-radius: 12px;
+    border-radius: 100px;
     transition: all 0.3s ease;
 }
 
-.mobile-nav-item.active {
-    color: var(--gold-mid);
-    background: rgba(201, 169, 98, 0.1);
-}
-
-.mobile-nav-icon {
-    font-size: 20px;
+.mobile-nav-tab.active {
+    color: var(--bg-dark);
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-mid));
+    box-shadow: 0 2px 12px rgba(201, 169, 98, 0.4);
 }
 
 /* ========================================
