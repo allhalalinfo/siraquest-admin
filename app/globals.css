@@ -1187,36 +1187,41 @@ body.modal-open {
     
     .modal-backdrop {
         padding: 0;
-        align-items: flex-end;
+        align-items: stretch;
+        overflow-y: auto;
     }
     
     .modal-container {
-        max-height: 95vh;
+        max-height: none;
+        min-height: 100vh;
         margin: 0;
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-        border-bottom: none;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
     }
     
     .modal-body {
         padding: 20px;
-        max-height: 60vh;
+        flex: 1;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .modal-header {
-        padding: 20px;
+        padding: 16px 20px;
         position: sticky;
         top: 0;
         background: var(--bg-main);
         z-index: 10;
+        flex-shrink: 0;
     }
     
     .modal-footer {
         padding: 16px 20px;
         padding-bottom: calc(16px + env(safe-area-inset-bottom));
-        position: sticky;
-        bottom: 0;
         background: var(--bg-main);
+        flex-shrink: 0;
+        border-top: 1px solid var(--border-glass);
     }
     
     .topics-grid {

@@ -12,6 +12,7 @@ interface Question {
   group_id: number
   level_id: number
   source_id: number | null
+  difficulty: string
   quiz_groups?: { title: string }
   quiz_levels?: { title: string }
   sources?: { title: string }
@@ -29,12 +30,6 @@ interface Group {
   title: string
 }
 
-interface Level {
-  id: number
-  title: string
-  group_id: number
-}
-
 const ITEMS_PER_PAGE = 20
 
 function QuestionsContent() {
@@ -44,12 +39,11 @@ function QuestionsContent() {
   const [questions, setQuestions] = useState<Question[]>([])
   const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([])
   const [groups, setGroups] = useState<Group[]>([])
-  const [levels, setLevels] = useState<Level[]>([])
   const [loading, setLoading] = useState(true)
   
   // Filters
   const [selectedGroup, setSelectedGroup] = useState(initialGroup)
-  const [selectedLevel, setSelectedLevel] = useState('')
+  const [selectedDifficulty, setSelectedDifficulty] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   
   // Expansion & Answers
@@ -69,23 +63,21 @@ function QuestionsContent() {
 
   useEffect(() => {
     filterQuestions()
-  }, [questions, selectedGroup, selectedLevel, searchTerm])
+  }, [questions, selectedGroup, selectedDifficulty, searchTerm])
 
   async function loadData() {
     try {
       const supabase = getSupabase()
-      const [questionsRes, groupsRes, levelsRes] = await Promise.all([
+      const [questionsRes, groupsRes] = await Promise.all([
         supabase
           .from('questions')
           .select('*, quiz_groups(title), quiz_levels(title), sources(title)')
           .order('id', { ascending: true }),
         supabase.from('quiz_groups').select('*').order('order'),
-        supabase.from('quiz_levels').select('*').order('group_id').order('order'),
       ])
 
       setQuestions(questionsRes.data || [])
       setGroups(groupsRes.data || [])
-      setLevels(levelsRes.data || [])
     } catch (error) {
       console.error('Error:', error)
     } finally {
@@ -100,8 +92,8 @@ function QuestionsContent() {
       filtered = filtered.filter((q) => q.group_id === parseInt(selectedGroup))
     }
 
-    if (selectedLevel) {
-      filtered = filtered.filter((q) => q.quiz_levels?.title === selectedLevel)
+    if (selectedDifficulty) {
+      filtered = filtered.filter((q) => q.difficulty === selectedDifficulty)
     }
 
     if (searchTerm) {
@@ -111,6 +103,19 @@ function QuestionsContent() {
 
     setFilteredQuestions(filtered)
     setCurrentPage(1)
+  }
+  
+  // Helper for difficulty display
+  const difficultyLabels: { [key: string]: string } = {
+    'easy': 'Лёгкий',
+    'medium': 'Средний', 
+    'hard': 'Сложный'
+  }
+  
+  const difficultyColors: { [key: string]: string } = {
+    'easy': '#4ade80',
+    'medium': '#fbbf24',
+    'hard': '#f87171'
   }
 
   async function toggleExpand(id: number) {
@@ -182,9 +187,6 @@ function QuestionsContent() {
     }
   }
 
-  // Unique level titles for filter
-  const uniqueLevels = [...new Set(levels.map((l) => l.title))]
-
   // Pagination
   const totalPages = Math.ceil(filteredQuestions.length / ITEMS_PER_PAGE)
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE
@@ -229,13 +231,13 @@ function QuestionsContent() {
 
         <select
           className="filter-select"
-          value={selectedLevel}
-          onChange={(e) => setSelectedLevel(e.target.value)}
+          value={selectedDifficulty}
+          onChange={(e) => setSelectedDifficulty(e.target.value)}
         >
-          <option value="">Все уровни</option>
-          {uniqueLevels.map((l) => (
-            <option key={l} value={l}>{l}</option>
-          ))}
+          <option value="">Все сложности</option>
+          <option value="easy">🟢 Лёгкий</option>
+          <option value="medium">🟡 Средний</option>
+          <option value="hard">🔴 Сложный</option>
         </select>
 
         <input
@@ -284,7 +286,9 @@ function QuestionsContent() {
 
                 <div className="question-meta">
                   <span>{q.quiz_groups?.title || '—'}</span>
-                  <span>{q.quiz_levels?.title || '—'}</span>
+                  <span style={{ color: difficultyColors[q.difficulty] || '#888' }}>
+                    {difficultyLabels[q.difficulty] || q.difficulty}
+                  </span>
                   {q.sources?.title && <span>{q.sources.title}</span>}
                 </div>
 
