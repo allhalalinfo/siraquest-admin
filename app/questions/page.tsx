@@ -156,7 +156,7 @@ function QuestionsContent() {
         answersByQuestion[a.question_id].push(a)
       })
 
-      const headers = ['№', 'Вопрос', 'A', 'B', 'C', 'D', 'Правильный', 'Объяснение', 'Тема', 'Уровень', 'Источник', 'Автор']
+      const headers = ['№', 'Вопрос', 'A', 'B', 'C', 'D', 'Правильный', 'Объяснение', 'Тема', 'Уровень', 'Источник']
       const rows = filteredQuestions.map((q, i) => {
         const qAnswers = answersByQuestion[q.id] || []
         const correct = qAnswers.find((a) => a.is_correct)
@@ -175,7 +175,6 @@ function QuestionsContent() {
           q.quiz_groups?.title || '',
           q.quiz_levels?.title || '',
           q.sources?.title || '',
-          q.author || '',
         ]
       })
 
