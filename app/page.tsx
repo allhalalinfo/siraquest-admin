@@ -193,10 +193,14 @@ export default function Dashboard() {
           ) : (
             <div className="topics-grid">
               {sourceCounts.map((source) => (
-                <div key={source.id} className="topic-card">
+                <Link 
+                  key={source.id} 
+                  href={`/questions?source=${source.id}`}
+                  className="topic-card clickable"
+                >
                   <span className="topic-name">{source.title}</span>
                   <span className="topic-count">{source.count}</span>
-                </div>
+                </Link>
               ))}
             </div>
           )}

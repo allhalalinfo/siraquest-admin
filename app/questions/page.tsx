@@ -33,17 +33,25 @@ interface Group {
 
 const ITEMS_PER_PAGE = 20
 
+interface Source {
+  id: number
+  title: string
+}
+
 function QuestionsContent() {
   const searchParams = useSearchParams()
   const initialGroup = searchParams.get('group') || ''
+  const initialSource = searchParams.get('source') || ''
   
   const [questions, setQuestions] = useState<Question[]>([])
   const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([])
   const [groups, setGroups] = useState<Group[]>([])
+  const [sources, setSources] = useState<Source[]>([])
   const [loading, setLoading] = useState(true)
   
   // Filters
   const [selectedGroup, setSelectedGroup] = useState(initialGroup)
+  const [selectedSource, setSelectedSource] = useState(initialSource)
   const [selectedDifficulty, setSelectedDifficulty] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   
@@ -67,22 +75,24 @@ function QuestionsContent() {
 
   useEffect(() => {
     filterQuestions()
-  }, [questions, selectedGroup, selectedDifficulty, searchTerm])
+  }, [questions, selectedGroup, selectedSource, selectedDifficulty, searchTerm])
 
   async function loadData() {
     try {
       const supabase = getSupabase()
-      const [questionsRes, groupsRes] = await Promise.all([
+      const [questionsRes, groupsRes, sourcesRes] = await Promise.all([
         supabase
           .from('questions')
           .select('*, quiz_groups(title), quiz_levels(title), sources(title)')
           .is('deleted_at', null)  // Only show non-deleted questions
           .order('id', { ascending: true }),
         supabase.from('quiz_groups').select('*').order('order'),
+        supabase.from('sources').select('*').order('title'),
       ])
 
       setQuestions(questionsRes.data || [])
       setGroups(groupsRes.data || [])
+      setSources(sourcesRes.data || [])
     } catch (error) {
       console.error('Error:', error)
     } finally {
@@ -95,6 +105,10 @@ function QuestionsContent() {
 
     if (selectedGroup) {
       filtered = filtered.filter((q) => q.group_id === parseInt(selectedGroup))
+    }
+
+    if (selectedSource) {
+      filtered = filtered.filter((q) => q.source_id === parseInt(selectedSource))
     }
 
     if (selectedDifficulty) {
@@ -263,6 +277,17 @@ function QuestionsContent() {
           <option value="easy">Лёгкий</option>
           <option value="medium">Средний</option>
           <option value="hard">Сложный</option>
+        </select>
+
+        <select
+          className="filter-select"
+          value={selectedSource}
+          onChange={(e) => setSelectedSource(e.target.value)}
+        >
+          <option value="">Все источники</option>
+          {sources.map((s) => (
+            <option key={s.id} value={String(s.id)}>{s.title}</option>
+          ))}
         </select>
 
         <input
