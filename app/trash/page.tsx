@@ -17,6 +17,7 @@ export default function TrashPage() {
   const [loading, setLoading] = useState(true)
   const [restoring, setRestoring] = useState<number | null>(null)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null)
 
   function showToast(message: string, type: 'success' | 'error' = 'success') {
     setToast({ message, type })
@@ -45,8 +46,6 @@ export default function TrashPage() {
   }
 
   async function restoreQuestion(id: number) {
-    if (!confirm('Восстановить этот вопрос?')) return
-    
     setRestoring(id)
     try {
       const supabase = getSupabase()
@@ -95,9 +94,12 @@ export default function TrashPage() {
     }
   }
 
-  async function permanentDelete(id: number) {
-    if (!confirm('УДАЛИТЬ НАВСЕГДА? Это действие нельзя отменить!')) return
-    
+  function handleDeleteClick(id: number) {
+    setConfirmDeleteId(id)
+  }
+
+  async function confirmPermanentDelete(id: number) {
+    setConfirmDeleteId(null)
     setRestoring(id)
     try {
       const supabase = getSupabase()
@@ -183,13 +185,32 @@ export default function TrashPage() {
                 >
                   {restoring === q.id ? 'Восстановление...' : '↩ Восстановить'}
                 </button>
-                <button
-                  className="btn btn-delete"
-                  onClick={() => permanentDelete(q.id)}
-                  disabled={restoring === q.id}
-                >
-                  Удалить навсегда
-                </button>
+                
+                {confirmDeleteId === q.id ? (
+                  <div className="delete-confirm-inline">
+                    <span>Удалить навсегда?</span>
+                    <button
+                      className="btn btn-delete-yes"
+                      onClick={() => confirmPermanentDelete(q.id)}
+                    >
+                      Да
+                    </button>
+                    <button
+                      className="btn btn-delete-no"
+                      onClick={() => setConfirmDeleteId(null)}
+                    >
+                      Нет
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="btn btn-delete"
+                    onClick={() => handleDeleteClick(q.id)}
+                    disabled={restoring === q.id}
+                  >
+                    Удалить навсегда
+                  </button>
+                )}
               </div>
             </div>
           ))}
