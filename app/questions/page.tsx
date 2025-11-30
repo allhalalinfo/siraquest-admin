@@ -202,7 +202,7 @@ function QuestionsContent() {
     setTimeout(() => {
       const pagination = document.querySelector('.pagination')
       if (pagination) {
-        pagination.scrollIntoView({ block: 'end', behavior: 'instant' as ScrollBehavior })
+        pagination.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior })
       }
     }, 10)
   }
