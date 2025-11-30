@@ -345,10 +345,7 @@ function QuestionsContent() {
         <div className="pagination">
           <button
             className="pagination-btn"
-            onClick={() => {
-              setCurrentPage((p) => Math.max(1, p - 1))
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
           >
             ← Назад
@@ -358,10 +355,7 @@ function QuestionsContent() {
           </span>
           <button
             className="pagination-btn"
-            onClick={() => {
-              setCurrentPage((p) => Math.min(totalPages, p + 1))
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
           >
             Вперёд →
