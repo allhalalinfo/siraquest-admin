@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, Suspense, useRef } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { getSupabase } from '@/lib/supabase'
 import QuestionModal from '@/components/QuestionModal'
@@ -53,7 +53,6 @@ function QuestionsContent() {
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
-  const scrollPosRef = useRef(0)
   
   // Modal
   const [modalOpen, setModalOpen] = useState(false)
@@ -200,21 +199,20 @@ function QuestionsContent() {
 
   // Функции навигации с сохранением позиции скролла
   const goToPrevPage = () => {
-    scrollPosRef.current = window.scrollY
-    setCurrentPage((p) => Math.max(1, p - 1))
+    const pos = window.scrollY
+    setCurrentPage((p) => {
+      setTimeout(() => window.scrollTo(0, pos), 0)
+      return Math.max(1, p - 1)
+    })
   }
 
   const goToNextPage = () => {
-    scrollPosRef.current = window.scrollY
-    setCurrentPage((p) => Math.min(totalPages, p + 1))
+    const pos = window.scrollY
+    setCurrentPage((p) => {
+      setTimeout(() => window.scrollTo(0, pos), 0)
+      return Math.min(totalPages, p + 1)
+    })
   }
-
-  // Восстановление позиции после смены страницы
-  useEffect(() => {
-    if (scrollPosRef.current > 0) {
-      window.scrollTo(0, scrollPosRef.current)
-    }
-  }, [currentPage])
 
   if (loading) {
     return <div className="loading">Загрузка...</div>
