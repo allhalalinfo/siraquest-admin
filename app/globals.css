@@ -1423,7 +1423,7 @@ body.modal-open {
     .main {
         margin-left: 0;
         padding: 20px;
-        padding-bottom: 120px;
+        padding-bottom: 80px;
     }
     
     .section-header {
@@ -1557,6 +1557,7 @@ body.modal-open {
     
     .pagination {
         gap: 12px;
+        margin-bottom: 70px;
     }
     
     .pagination-btn {
