@@ -183,7 +183,7 @@ export default function Dashboard() {
       </div>
 
       {/* Sources */}
-      <div id="sources-section" className="card" style={{ marginBottom: '100px' }}>
+      <div id="sources-section" className="card" style={{ marginBottom: '60px' }}>
         <div className="card-header">
           <h2>По источникам</h2>
         </div>

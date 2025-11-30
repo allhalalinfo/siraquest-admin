@@ -150,7 +150,7 @@ export default function TrashPage() {
       </div>
 
       {deletedQuestions.length === 0 ? (
-        <div className="card" style={{ marginBottom: '100px' }}>
+        <div className="card" style={{ marginBottom: '60px' }}>
           <div className="card-body">
             <div className="empty-state">
               <p>Корзина пуста</p>
@@ -161,7 +161,7 @@ export default function TrashPage() {
           </div>
         </div>
       ) : (
-        <div className="questions-list" style={{ marginBottom: '100px' }}>
+        <div className="questions-list" style={{ marginBottom: '60px' }}>
           {deletedQuestions.map((q) => (
             <div key={q.id} className="question-card deleted">
               <div className="question-header">
