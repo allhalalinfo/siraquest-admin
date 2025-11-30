@@ -264,14 +264,20 @@ function QuestionsContent() {
               <div
                 key={q.id}
                 className={`question-card ${isExpanded ? 'expanded' : ''}`}
-                onClick={() => toggleExpand(q.id)}
               >
-                <div className="question-header">
+                <div className="question-header" onClick={() => toggleExpand(q.id)}>
                   <span className="question-number">#{num}</span>
-                  <div className="question-actions" onClick={(e) => e.stopPropagation()}>
+                  <div className="question-header-right">
+                    <button
+                      className="btn-icon btn-expand"
+                      title={isExpanded ? 'Свернуть' : 'Развернуть'}
+                    >
+                      {isExpanded ? '▲' : '▼'}
+                    </button>
                     <button
                       className="btn-icon"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation()
                         setEditingQuestion(q)
                         setModalOpen(true)
                       }}
@@ -282,9 +288,9 @@ function QuestionsContent() {
                   </div>
                 </div>
 
-                <div className="question-text">{q.text}</div>
+                <div className="question-text" onClick={() => toggleExpand(q.id)}>{q.text}</div>
 
-                <div className="question-meta">
+                <div className="question-meta" onClick={() => toggleExpand(q.id)}>
                   <span>{q.quiz_groups?.title || '—'}</span>
                   <span style={{ color: difficultyColors[q.difficulty] || '#888' }}>
                     {difficultyLabels[q.difficulty] || q.difficulty}
@@ -292,9 +298,9 @@ function QuestionsContent() {
                   {q.sources?.title && <span>{q.sources.title}</span>}
                 </div>
 
-                {/* Expanded Details */}
+                {/* Expanded Details - click to collapse */}
                 {isExpanded && (
-                  <div className="question-details">
+                  <div className="question-details" onClick={() => toggleExpand(q.id)}>
                     <div className="answers-list">
                       {qAnswers.map((a, i) => (
                         <div key={a.id} className={`answer-item ${a.is_correct ? 'correct' : ''}`}>
@@ -309,6 +315,8 @@ function QuestionsContent() {
                         <strong>Объяснение:</strong> {q.explanation}
                       </div>
                     )}
+                    
+                    <div className="collapse-hint">Нажмите, чтобы свернуть ▲</div>
                   </div>
                 )}
               </div>

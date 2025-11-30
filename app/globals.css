@@ -588,6 +588,22 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.question-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-expand {
+    opacity: 0.5;
+    font-size: 10px;
+}
+
+.question-card:hover .btn-expand {
+    opacity: 1;
 }
 
 .question-number {
@@ -610,10 +626,12 @@ body {
     color: var(--text-bright);
     line-height: 1.7;
     margin-bottom: 16px;
+    cursor: pointer;
 }
 
 .question-meta {
     display: flex;
+    cursor: pointer;
     flex-wrap: wrap;
     gap: 16px;
     font-size: 12px;
@@ -636,6 +654,20 @@ body {
     padding-top: 20px;
     border-top: 1px solid var(--border-glass);
     animation: fadeIn 0.3s ease;
+    cursor: pointer;
+}
+
+.collapse-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 16px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.question-details:hover .collapse-hint {
+    opacity: 1;
 }
 
 .answers-list {
