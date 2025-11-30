@@ -38,7 +38,7 @@ export default function Dashboard() {
     try {
       const supabase = getSupabase()
       const [questionsRes, groupsRes, sourcesRes] = await Promise.all([
-        supabase.from('questions').select('group_id, source_id, difficulty'),
+        supabase.from('questions').select('group_id, source_id, difficulty').is('deleted_at', null),
         supabase.from('quiz_groups').select('*').order('order'),
         supabase.from('sources').select('*').order('title'),
       ])
