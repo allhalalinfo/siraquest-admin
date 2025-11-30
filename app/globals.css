@@ -1375,6 +1375,14 @@ body.modal-open {
    ======================================== */
 
 @media (max-width: 1024px) {
+    html, body {
+        scroll-behavior: auto !important;
+    }
+    
+    .main, .questions-list {
+        overflow-anchor: none;
+    }
+    
     .sidebar {
         width: 80px;
     }
