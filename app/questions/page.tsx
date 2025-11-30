@@ -197,23 +197,24 @@ function QuestionsContent() {
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE
   const pageQuestions = filteredQuestions.slice(startIdx, startIdx + ITEMS_PER_PAGE)
 
-  // Функции навигации с сохранением позиции скролла
-  const goToPrevPage = () => {
-    const pos = window.scrollY
-    setCurrentPage((p) => Math.max(1, p - 1))
-    // Для iOS Safari нужна задержка
+  // Функции навигации — прокрутка к пагинации после смены страницы
+  const scrollToPagination = () => {
     setTimeout(() => {
-      window.scrollTo({ top: pos, behavior: 'instant' as ScrollBehavior })
-    }, 50)
+      const pagination = document.querySelector('.pagination')
+      if (pagination) {
+        pagination.scrollIntoView({ block: 'end', behavior: 'instant' as ScrollBehavior })
+      }
+    }, 10)
+  }
+
+  const goToPrevPage = () => {
+    setCurrentPage((p) => Math.max(1, p - 1))
+    scrollToPagination()
   }
 
   const goToNextPage = () => {
-    const pos = window.scrollY
     setCurrentPage((p) => Math.min(totalPages, p + 1))
-    // Для iOS Safari нужна задержка
-    setTimeout(() => {
-      window.scrollTo({ top: pos, behavior: 'instant' as ScrollBehavior })
-    }, 50)
+    scrollToPagination()
   }
 
   if (loading) {
