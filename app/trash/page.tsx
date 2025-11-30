@@ -73,7 +73,7 @@ export default function TrashPage() {
           source_id: question.source_id,
           difficulty: question.difficulty,
           answers: answers || [],
-          action: 'restore',
+          action: 'update',
         })
       }
       

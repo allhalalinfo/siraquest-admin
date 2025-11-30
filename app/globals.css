@@ -736,10 +736,10 @@ body {
     margin-bottom: 12px;
 }
 
-.history-action {
-    font-size: 12px;
+.history-version {
+    font-size: 13px;
     font-weight: 600;
-    text-transform: uppercase;
+    color: var(--gold-mid);
 }
 
 .history-date {

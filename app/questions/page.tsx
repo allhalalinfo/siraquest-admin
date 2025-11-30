@@ -59,7 +59,7 @@ function QuestionsContent() {
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null)
   
   // History Modal
-  const [historyQuestionId, setHistoryQuestionId] = useState<number | null>(null)
+  const [historyQuestion, setHistoryQuestion] = useState<{ id: number; num: number } | null>(null)
 
   useEffect(() => {
     loadData()
@@ -259,7 +259,8 @@ function QuestionsContent() {
         {pageQuestions.length === 0 ? (
           <div className="empty-state">Вопросы не найдены</div>
         ) : (
-          pageQuestions.map((q) => {
+          pageQuestions.map((q, idx) => {
+            const displayNum = startIdx + idx + 1
             const isExpanded = expandedId === q.id
             const qAnswers = answers[q.id] || []
             const letters = ['A', 'B', 'C', 'D']
@@ -270,7 +271,7 @@ function QuestionsContent() {
                 className={`question-card ${isExpanded ? 'expanded' : ''}`}
               >
                 <div className="question-header" onClick={() => toggleExpand(q.id)}>
-                  <span className="question-number">#{q.id}</span>
+                  <span className="question-number">#{displayNum}</span>
                   <div className="question-header-right">
                     <button
                       className="btn-icon btn-expand"
@@ -282,7 +283,7 @@ function QuestionsContent() {
                       className="btn-history"
                       onClick={(e) => {
                         e.stopPropagation()
-                        setHistoryQuestionId(q.id)
+                        setHistoryQuestion({ id: q.id, num: displayNum })
                       }}
                       title="История изменений"
                     >
@@ -384,10 +385,11 @@ function QuestionsContent() {
         />
       )}
       
-      {historyQuestionId && (
+      {historyQuestion && (
         <HistoryModal
-          questionId={historyQuestionId}
-          onClose={() => setHistoryQuestionId(null)}
+          questionId={historyQuestion.id}
+          questionNum={historyQuestion.num}
+          onClose={() => setHistoryQuestion(null)}
         />
       )}
     </>

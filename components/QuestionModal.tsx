@@ -156,7 +156,7 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
 
       if (question) {
         // Save current version to history before updating
-        await saveToHistory(question.id, 'update')
+        await saveToHistory(question.id)
         
         const { error } = await supabase
           .from('questions')
@@ -209,7 +209,7 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       const supabase = getSupabase()
       
       // Save to history before soft delete
-      await saveToHistory(question.id, 'delete')
+      await saveToHistory(question.id)
       
       // Soft delete - set deleted_at instead of actual delete
       const { error } = await supabase
@@ -234,8 +234,8 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
 
   const filteredLevels = levels.filter((l) => l.group_id === parseInt(groupId))
 
-  // Save question history before changes
-  async function saveToHistory(questionId: number, action: 'update' | 'delete' | 'restore') {
+  // Save question history before changes (keep max 5 versions)
+  async function saveToHistory(questionId: number) {
     const supabase = getSupabase()
     
     // Get current question data
@@ -264,8 +264,20 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       source_id: currentQuestion.source_id,
       difficulty: currentQuestion.difficulty,
       answers: currentAnswers || [],
-      action: action,
+      action: 'update',
     })
+    
+    // Delete old versions (keep only 5)
+    const { data: allHistory } = await supabase
+      .from('question_history')
+      .select('id')
+      .eq('question_id', questionId)
+      .order('changed_at', { ascending: false })
+    
+    if (allHistory && allHistory.length > 5) {
+      const idsToDelete = allHistory.slice(5).map(h => h.id)
+      await supabase.from('question_history').delete().in('id', idsToDelete)
+    }
   }
 
   return (
