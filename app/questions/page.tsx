@@ -42,6 +42,7 @@ function QuestionsContent() {
   const searchParams = useSearchParams()
   const initialGroup = searchParams.get('group') || ''
   const initialSource = searchParams.get('source') || ''
+  const initialDifficulty = searchParams.get('difficulty') || ''
   
   const [questions, setQuestions] = useState<Question[]>([])
   const [filteredQuestions, setFilteredQuestions] = useState<Question[]>([])
@@ -52,7 +53,7 @@ function QuestionsContent() {
   // Filters
   const [selectedGroup, setSelectedGroup] = useState(initialGroup)
   const [selectedSource, setSelectedSource] = useState(initialSource)
-  const [selectedDifficulty, setSelectedDifficulty] = useState('')
+  const [selectedDifficulty, setSelectedDifficulty] = useState(initialDifficulty)
   const [searchTerm, setSearchTerm] = useState('')
   
   // Expansion & Answers
