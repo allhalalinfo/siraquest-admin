@@ -259,8 +259,7 @@ function QuestionsContent() {
         {pageQuestions.length === 0 ? (
           <div className="empty-state">Вопросы не найдены</div>
         ) : (
-          pageQuestions.map((q, idx) => {
-            const num = startIdx + idx + 1
+          pageQuestions.map((q) => {
             const isExpanded = expandedId === q.id
             const qAnswers = answers[q.id] || []
             const letters = ['A', 'B', 'C', 'D']
@@ -271,7 +270,7 @@ function QuestionsContent() {
                 className={`question-card ${isExpanded ? 'expanded' : ''}`}
               >
                 <div className="question-header" onClick={() => toggleExpand(q.id)}>
-                  <span className="question-number">#{num}</span>
+                  <span className="question-number">#{q.id}</span>
                   <div className="question-header-right">
                     <button
                       className="btn-icon btn-expand"
