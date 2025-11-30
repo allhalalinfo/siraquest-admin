@@ -851,30 +851,24 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 12px;
-    margin-top: 32px;
-    padding: 20px;
-    background: var(--bg-card);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border-glass);
-    border-radius: var(--radius);
+    gap: 16px;
+    margin-top: 24px;
 }
 
 .pagination-btn {
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    background: transparent;
     border: 1px solid var(--border-glass);
-    border-radius: 10px;
-    font-size: 14px;
-    color: var(--text-main);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-soft);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .pagination-btn:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
 }
 
 .pagination-btn:disabled {
@@ -883,9 +877,8 @@ body {
 }
 
 .pagination-info {
-    font-size: 14px;
-    color: var(--text-soft);
-    padding: 0 16px;
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
 /* ========================================
@@ -1008,6 +1001,33 @@ body.modal-open {
     }
 }
 
+/* Global Toast (fixed position) */
+.toast-global {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 9999;
+    animation: toastSlideIn 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.toast-global.toast-success {
+    background: linear-gradient(135deg, #1a3a2a, #0f2a1a);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.toast-global.toast-error {
+    background: linear-gradient(135deg, #3a1a1a, #2a0f0f);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
 .btn-link {
     background: none;
     border: none;
@@ -1051,13 +1071,13 @@ body.modal-open {
 }
 
 .btn-delete {
-    padding: 10px 18px;
-    font-size: 13px;
+    padding: 12px 24px;
+    font-size: 14px;
     font-weight: 500;
     color: #f87171;
     background: rgba(248, 113, 113, 0.1);
     border: 1px solid rgba(248, 113, 113, 0.3);
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -1487,8 +1507,16 @@ body.modal-open {
     }
     
     .pagination {
-        flex-wrap: wrap;
-        gap: 10px;
+        gap: 12px;
+    }
+    
+    .pagination-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .pagination-info {
+        font-size: 11px;
     }
     
     .card-header {

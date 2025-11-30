@@ -16,6 +16,12 @@ export default function TrashPage() {
   const [deletedQuestions, setDeletedQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [restoring, setRestoring] = useState<number | null>(null)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
+
+  function showToast(message: string, type: 'success' | 'error' = 'success') {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   useEffect(() => {
     loadDeletedQuestions()
@@ -80,10 +86,10 @@ export default function TrashPage() {
       if (error) throw error
 
       setDeletedQuestions(prev => prev.filter(q => q.id !== id))
-      alert('Вопрос восстановлен ✓')
+      showToast('Вопрос восстановлен ✓', 'success')
     } catch (error: any) {
       console.error('Restore error:', error)
-      alert(`Ошибка: ${error?.message || 'Неизвестная ошибка'}`)
+      showToast(`Ошибка: ${error?.message || 'Неизвестная ошибка'}`, 'error')
     } finally {
       setRestoring(null)
     }
@@ -104,10 +110,10 @@ export default function TrashPage() {
       if (error) throw error
 
       setDeletedQuestions(prev => prev.filter(q => q.id !== id))
-      alert('Вопрос удалён навсегда')
+      showToast('Вопрос удалён навсегда', 'success')
     } catch (error: any) {
       console.error('Delete error:', error)
-      alert(`Ошибка: ${error?.message || 'Неизвестная ошибка'}`)
+      showToast(`Ошибка: ${error?.message || 'Неизвестная ошибка'}`, 'error')
     } finally {
       setRestoring(null)
     }
@@ -130,6 +136,13 @@ export default function TrashPage() {
 
   return (
     <>
+      {/* Toast */}
+      {toast && (
+        <div className={`toast-global toast-${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+      
       <div className="section-header">
         <h1>Корзина</h1>
       </div>
