@@ -110,7 +110,8 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
     e.preventDefault()
 
     if (!groupId || !levelId || !text || answers.some((a) => !a.trim()) || !explanation) {
-      alert('Заполните все обязательные поля')
+      setSuccessMessage('⚠️ Заполните все обязательные поля')
+      setTimeout(() => setSuccessMessage(''), 3000)
       return
     }
 
@@ -134,7 +135,8 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
         
         if (sourceError) {
           console.error('Source error:', sourceError)
-          alert(`Ошибка создания источника: ${sourceError.message}`)
+          setSuccessMessage(`❌ Ошибка источника: ${sourceError.message}`)
+          setTimeout(() => setSuccessMessage(''), 5000)
           setSaving(false)
           return
         }
@@ -194,7 +196,8 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       
     } catch (error: any) {
       console.error('Save error:', error)
-      alert(`Ошибка сохранения: ${error?.message || 'Неизвестная ошибка'}`)
+      setSuccessMessage(`❌ Ошибка: ${error?.message || 'Неизвестная ошибка'}`)
+      setTimeout(() => setSuccessMessage(''), 5000)
     } finally {
       setSaving(false)
     }
