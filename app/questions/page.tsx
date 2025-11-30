@@ -200,17 +200,21 @@ function QuestionsContent() {
   // Функции навигации с сохранением позиции скролла
   const goToPrevPage = () => {
     const pos = window.scrollY
-    setCurrentPage((p) => {
-      setTimeout(() => window.scrollTo(0, pos), 0)
-      return Math.max(1, p - 1)
+    setCurrentPage((p) => Math.max(1, p - 1))
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, pos)
+      })
     })
   }
 
   const goToNextPage = () => {
     const pos = window.scrollY
-    setCurrentPage((p) => {
-      setTimeout(() => window.scrollTo(0, pos), 0)
-      return Math.min(totalPages, p + 1)
+    setCurrentPage((p) => Math.min(totalPages, p + 1))
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, pos)
+      })
     })
   }
 
