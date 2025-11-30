@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { useEffect, useState, Suspense, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { getSupabase } from '@/lib/supabase'
 import QuestionModal from '@/components/QuestionModal'
@@ -53,6 +53,7 @@ function QuestionsContent() {
   
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
+  const scrollPosRef = useRef(0)
   
   // Modal
   const [modalOpen, setModalOpen] = useState(false)
@@ -196,6 +197,24 @@ function QuestionsContent() {
   const totalPages = Math.ceil(filteredQuestions.length / ITEMS_PER_PAGE)
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE
   const pageQuestions = filteredQuestions.slice(startIdx, startIdx + ITEMS_PER_PAGE)
+
+  // Функции навигации с сохранением позиции скролла
+  const goToPrevPage = () => {
+    scrollPosRef.current = window.scrollY
+    setCurrentPage((p) => Math.max(1, p - 1))
+  }
+
+  const goToNextPage = () => {
+    scrollPosRef.current = window.scrollY
+    setCurrentPage((p) => Math.min(totalPages, p + 1))
+  }
+
+  // Восстановление позиции после смены страницы
+  useEffect(() => {
+    if (scrollPosRef.current > 0) {
+      window.scrollTo(0, scrollPosRef.current)
+    }
+  }, [currentPage])
 
   if (loading) {
     return <div className="loading">Загрузка...</div>
@@ -345,7 +364,7 @@ function QuestionsContent() {
         <div className="pagination">
           <button
             className="pagination-btn"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            onClick={goToPrevPage}
             disabled={currentPage === 1}
           >
             ← Назад
@@ -355,7 +374,7 @@ function QuestionsContent() {
           </span>
           <button
             className="pagination-btn"
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            onClick={goToNextPage}
             disabled={currentPage === totalPages}
           >
             Вперёд →
