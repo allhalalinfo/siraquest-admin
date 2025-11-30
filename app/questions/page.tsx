@@ -72,6 +72,7 @@ function QuestionsContent() {
         supabase
           .from('questions')
           .select('*, quiz_groups(title), quiz_levels(title), sources(title)')
+          .is('deleted_at', null)  // Only show non-deleted questions
           .order('id', { ascending: true }),
         supabase.from('quiz_groups').select('*').order('order'),
       ])

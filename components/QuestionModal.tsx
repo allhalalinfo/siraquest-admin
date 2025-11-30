@@ -10,6 +10,7 @@ interface Question {
   group_id: number
   level_id: number
   source_id: number | null
+  difficulty?: string
 }
 
 interface Group {
@@ -154,6 +155,9 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       let questionId: number
 
       if (question) {
+        // Save current version to history before updating
+        await saveToHistory(question.id, 'update')
+        
         const { error } = await supabase
           .from('questions')
           .update(questionData)
@@ -198,12 +202,21 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
   async function handleDelete() {
     if (!question || !onDelete) return
     
-    if (!confirm('Удалить этот вопрос?')) return
+    if (!confirm('Удалить этот вопрос? (можно будет восстановить)')) return
     
     setDeleting(true)
     try {
       const supabase = getSupabase()
-      const { error } = await supabase.from('questions').delete().eq('id', question.id)
+      
+      // Save to history before soft delete
+      await saveToHistory(question.id, 'delete')
+      
+      // Soft delete - set deleted_at instead of actual delete
+      const { error } = await supabase
+        .from('questions')
+        .update({ deleted_at: new Date().toISOString() })
+        .eq('id', question.id)
+      
       if (error) throw error
       
       setSuccessMessage('Вопрос удалён ✓')
@@ -220,6 +233,40 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
   }
 
   const filteredLevels = levels.filter((l) => l.group_id === parseInt(groupId))
+
+  // Save question history before changes
+  async function saveToHistory(questionId: number, action: 'update' | 'delete' | 'restore') {
+    const supabase = getSupabase()
+    
+    // Get current question data
+    const { data: currentQuestion } = await supabase
+      .from('questions')
+      .select('*')
+      .eq('id', questionId)
+      .single()
+    
+    if (!currentQuestion) return
+    
+    // Get current answers
+    const { data: currentAnswers } = await supabase
+      .from('answers')
+      .select('*')
+      .eq('question_id', questionId)
+      .order('id')
+    
+    // Save to history
+    await supabase.from('question_history').insert({
+      question_id: questionId,
+      text: currentQuestion.text,
+      explanation: currentQuestion.explanation,
+      group_id: currentQuestion.group_id,
+      level_id: currentQuestion.level_id,
+      source_id: currentQuestion.source_id,
+      difficulty: currentQuestion.difficulty,
+      answers: currentAnswers || [],
+      action: action,
+    })
+  }
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
