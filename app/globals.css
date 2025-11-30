@@ -1414,6 +1414,10 @@ body.modal-open {
 }
 
 @media (max-width: 768px) {
+    html, body {
+        scroll-behavior: auto !important;
+    }
+    
     .sidebar {
         display: none;
     }
@@ -1426,6 +1430,11 @@ body.modal-open {
         margin-left: 0;
         padding: 20px;
         padding-bottom: 80px;
+        overflow-anchor: none;
+    }
+    
+    .questions-list {
+        overflow-anchor: none;
     }
     
     .section-header {
