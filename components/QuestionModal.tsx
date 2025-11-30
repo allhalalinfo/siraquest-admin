@@ -41,6 +41,7 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
   const [sources, setSources] = useState<Source[]>([])
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
 
   // Form state
   const [groupId, setGroupId] = useState<string>('')
@@ -178,7 +179,14 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       const { error: answersError } = await supabase.from('answers').insert(answersData)
       if (answersError) throw answersError
 
-      onSave()
+      // Show success message
+      setSuccessMessage(question ? 'Вопрос обновлён ✓' : 'Вопрос добавлен ✓')
+      
+      // Close after delay
+      setTimeout(() => {
+        onSave()
+      }, 1000)
+      
     } catch (error: any) {
       console.error('Save error:', error)
       alert(`Ошибка сохранения: ${error?.message || 'Неизвестная ошибка'}`)
@@ -197,12 +205,16 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       const supabase = getSupabase()
       const { error } = await supabase.from('questions').delete().eq('id', question.id)
       if (error) throw error
-      onDelete(question.id)
-      onClose()
-    } catch (error) {
+      
+      setSuccessMessage('Вопрос удалён ✓')
+      
+      setTimeout(() => {
+        onDelete(question.id)
+        onClose()
+      }, 1000)
+    } catch (error: any) {
       console.error('Delete error:', error)
-      alert('Ошибка удаления')
-    } finally {
+      alert(`Ошибка удаления: ${error?.message || 'Неизвестная ошибка'}`)
       setDeleting(false)
     }
   }
@@ -212,6 +224,13 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+        {/* Success Toast */}
+        {successMessage && (
+          <div className="toast toast-success">
+            {successMessage}
+          </div>
+        )}
+        
         <div className="modal-header">
           <h2>{question ? 'Редактировать вопрос' : 'Добавить вопрос'}</h2>
           <button className="modal-close" onClick={onClose} aria-label="Закрыть">×</button>
