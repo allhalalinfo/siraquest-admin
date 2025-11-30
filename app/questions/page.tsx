@@ -201,21 +201,19 @@ function QuestionsContent() {
   const goToPrevPage = () => {
     const pos = window.scrollY
     setCurrentPage((p) => Math.max(1, p - 1))
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.scrollTo(0, pos)
-      })
-    })
+    // Для iOS Safari нужна задержка
+    setTimeout(() => {
+      window.scrollTo({ top: pos, behavior: 'instant' as ScrollBehavior })
+    }, 50)
   }
 
   const goToNextPage = () => {
     const pos = window.scrollY
     setCurrentPage((p) => Math.min(totalPages, p + 1))
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.scrollTo(0, pos)
-      })
-    })
+    // Для iOS Safari нужна задержка
+    setTimeout(() => {
+      window.scrollTo({ top: pos, behavior: 'instant' as ScrollBehavior })
+    }, 50)
   }
 
   if (loading) {
