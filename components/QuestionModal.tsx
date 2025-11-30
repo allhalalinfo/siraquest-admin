@@ -50,6 +50,11 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
   const [correctAnswer, setCorrectAnswer] = useState(0)
   const [explanation, setExplanation] = useState('')
   const [sourceId, setSourceId] = useState<string>('')
+  
+  // New source
+  const [showNewSource, setShowNewSource] = useState(false)
+  const [newSourceTitle, setNewSourceTitle] = useState('')
+  const [newSourceUrl, setNewSourceUrl] = useState('')
 
   useEffect(() => {
     loadFormData()
@@ -110,12 +115,38 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
 
     try {
       const supabase = getSupabase()
+      
+      // Create new source if needed
+      let finalSourceId: number | null = sourceId ? parseInt(sourceId) : null
+      
+      if (showNewSource && newSourceTitle.trim()) {
+        const { data: newSource, error: sourceError } = await supabase
+          .from('sources')
+          .insert({ 
+            title: newSourceTitle.trim(), 
+            url: newSourceUrl.trim() || null,
+            type: 'other'
+          })
+          .select()
+        
+        if (sourceError) {
+          console.error('Source error:', sourceError)
+          alert(`Ошибка создания источника: ${sourceError.message}`)
+          setSaving(false)
+          return
+        }
+        
+        if (newSource && newSource[0]) {
+          finalSourceId = newSource[0].id
+        }
+      }
+      
       const questionData = {
         group_id: parseInt(groupId),
         level_id: parseInt(levelId),
         text: text.trim(),
         explanation: explanation.trim(),
-        source_id: sourceId ? parseInt(sourceId) : null,
+        source_id: finalSourceId,
         difficulty: 'medium',
       }
 
@@ -148,9 +179,9 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       if (answersError) throw answersError
 
       onSave()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Save error:', error)
-      alert('Ошибка сохранения')
+      alert(`Ошибка сохранения: ${error?.message || 'Неизвестная ошибка'}`)
     } finally {
       setSaving(false)
     }
@@ -286,16 +317,58 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
 
             <div className="form-group">
               <label className="form-label">Источник</label>
-              <select
-                className="form-select"
-                value={sourceId}
-                onChange={(e) => setSourceId(e.target.value)}
-              >
-                <option value="">Без источника</option>
-                {sources.map((s) => (
-                  <option key={s.id} value={s.id}>{s.title}</option>
-                ))}
-              </select>
+              {!showNewSource ? (
+                <>
+                  <select
+                    className="form-select"
+                    value={sourceId}
+                    onChange={(e) => setSourceId(e.target.value)}
+                  >
+                    <option value="">Без источника</option>
+                    {sources.map((s) => (
+                      <option key={s.id} value={s.id}>{s.title}</option>
+                    ))}
+                  </select>
+                  <button 
+                    type="button" 
+                    className="btn-link"
+                    onClick={() => {
+                      setShowNewSource(true)
+                      setSourceId('')
+                    }}
+                  >
+                    + Добавить новый источник
+                  </button>
+                </>
+              ) : (
+                <div className="new-source-form">
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Название источника *"
+                    value={newSourceTitle}
+                    onChange={(e) => setNewSourceTitle(e.target.value)}
+                  />
+                  <input
+                    type="url"
+                    className="form-input"
+                    placeholder="URL (необязательно)"
+                    value={newSourceUrl}
+                    onChange={(e) => setNewSourceUrl(e.target.value)}
+                  />
+                  <button 
+                    type="button" 
+                    className="btn-link"
+                    onClick={() => {
+                      setShowNewSource(false)
+                      setNewSourceTitle('')
+                      setNewSourceUrl('')
+                    }}
+                  >
+                    ← Выбрать из существующих
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

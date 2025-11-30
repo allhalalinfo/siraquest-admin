@@ -854,8 +854,36 @@ body.modal-open {
 
 .modal-body {
     padding: 28px;
+    padding-bottom: 40px;
     overflow-y: auto;
     flex: 1;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--gold-mid);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 8px 0;
+    margin-top: 8px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    color: var(--gold-light);
+    text-decoration: underline;
+}
+
+.new-source-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.new-source-form .form-input {
+    margin-bottom: 0;
 }
 
 .modal-footer {
@@ -1263,6 +1291,7 @@ body.modal-open {
     
     .modal-body {
         padding: 20px;
+        padding-bottom: 100px;
         flex: 1;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
