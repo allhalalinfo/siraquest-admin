@@ -457,7 +457,7 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
 
           <div className="modal-footer">
             {question && onDelete && (
-              {!showDeleteConfirm ? (
+              !showDeleteConfirm ? (
                 <button
                   type="button"
                   className="btn btn-delete"
@@ -484,7 +484,7 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
                     Нет
                   </button>
                 </div>
-              )}
+              )
             )}
             
             <div className="modal-footer-right">
