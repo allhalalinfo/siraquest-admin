@@ -8,6 +8,7 @@ export default function MobileNav() {
 
   const isHome = pathname === '/'
   const isQuestions = pathname.startsWith('/questions')
+  const isTrash = pathname === '/trash'
 
   return (
     <nav className="mobile-nav">
@@ -23,6 +24,12 @@ export default function MobileNav() {
           className={`mobile-nav-tab ${isQuestions ? 'active' : ''}`}
         >
           Вопросы
+        </Link>
+        <Link
+          href="/trash"
+          className={`mobile-nav-tab ${isTrash ? 'active' : ''}`}
+        >
+          Корзина
         </Link>
       </div>
     </nav>

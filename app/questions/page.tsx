@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState, useCallback, Suspense } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { getSupabase } from '@/lib/supabase'
 import QuestionModal from '@/components/QuestionModal'
+import HistoryModal from '@/components/HistoryModal'
 
 interface Question {
   id: number
@@ -56,6 +57,9 @@ function QuestionsContent() {
   // Modal
   const [modalOpen, setModalOpen] = useState(false)
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null)
+  
+  // History Modal
+  const [historyQuestionId, setHistoryQuestionId] = useState<number | null>(null)
 
   useEffect(() => {
     loadData()
@@ -276,6 +280,16 @@ function QuestionsContent() {
                       {isExpanded ? '▲' : '▼'}
                     </button>
                     <button
+                      className="btn-history"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setHistoryQuestionId(q.id)
+                      }}
+                      title="История изменений"
+                    >
+                      ⟲
+                    </button>
+                    <button
                       className="btn-icon"
                       onClick={(e) => {
                         e.stopPropagation()
@@ -368,6 +382,13 @@ function QuestionsContent() {
             setQuestions((prev) => prev.filter((q) => q.id !== id))
             setModalOpen(false)
           }}
+        />
+      )}
+      
+      {historyQuestionId && (
+        <HistoryModal
+          questionId={historyQuestionId}
+          onClose={() => setHistoryQuestionId(null)}
         />
       )}
     </>
