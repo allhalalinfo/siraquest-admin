@@ -312,9 +312,6 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
             )}
             
             <div className="modal-footer-right">
-              <button type="button" className="btn btn-outline" onClick={onClose}>
-                Закрыть
-              </button>
               <button type="submit" className="btn btn-gold" disabled={saving}>
                 {saving ? 'Сохранение...' : 'Сохранить'}
               </button>

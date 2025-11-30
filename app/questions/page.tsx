@@ -225,7 +225,7 @@ function QuestionsContent() {
         >
           <option value="">Все темы</option>
           {groups.map((g) => (
-            <option key={g.id} value={g.id}>{g.title}</option>
+            <option key={g.id} value={String(g.id)}>{g.title}</option>
           ))}
         </select>
 
@@ -235,9 +235,9 @@ function QuestionsContent() {
           onChange={(e) => setSelectedDifficulty(e.target.value)}
         >
           <option value="">Все сложности</option>
-          <option value="easy">🟢 Лёгкий</option>
-          <option value="medium">🟡 Средний</option>
-          <option value="hard">🔴 Сложный</option>
+          <option value="easy">Лёгкий</option>
+          <option value="medium">Средний</option>
+          <option value="hard">Сложный</option>
         </select>
 
         <input
