@@ -43,6 +43,7 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // Form state
   const [groupId, setGroupId] = useState<string>('')
@@ -199,12 +200,16 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
     }
   }
 
-  async function handleDelete() {
+  function handleDeleteClick() {
+    setShowDeleteConfirm(true)
+  }
+
+  async function confirmDelete() {
     if (!question || !onDelete) return
     
-    if (!confirm('Удалить этот вопрос? (можно будет восстановить)')) return
-    
+    setShowDeleteConfirm(false)
     setDeleting(true)
+    
     try {
       const supabase = getSupabase()
       
@@ -227,7 +232,7 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
       }, 1000)
     } catch (error: any) {
       console.error('Delete error:', error)
-      alert(`Ошибка удаления: ${error?.message || 'Неизвестная ошибка'}`)
+      setSuccessMessage('')
       setDeleting(false)
     }
   }
@@ -452,14 +457,34 @@ export default function QuestionModal({ question, onClose, onSave, onDelete }: P
 
           <div className="modal-footer">
             {question && onDelete && (
-              <button
-                type="button"
-                className="btn btn-delete"
-                onClick={handleDelete}
-                disabled={deleting}
-              >
-                {deleting ? 'Удаление...' : 'Удалить'}
-              </button>
+              {!showDeleteConfirm ? (
+                <button
+                  type="button"
+                  className="btn btn-delete"
+                  onClick={handleDeleteClick}
+                  disabled={deleting}
+                >
+                  {deleting ? 'Удаление...' : 'Удалить'}
+                </button>
+              ) : (
+                <div className="delete-confirm-inline">
+                  <span>Удалить?</span>
+                  <button
+                    type="button"
+                    className="btn btn-delete-yes"
+                    onClick={confirmDelete}
+                  >
+                    Да
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-delete-no"
+                    onClick={() => setShowDeleteConfirm(false)}
+                  >
+                    Нет
+                  </button>
+                </div>
+              )}
             )}
             
             <div className="modal-footer-right">
