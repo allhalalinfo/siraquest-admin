@@ -119,18 +119,18 @@ export default function Dashboard() {
 
       {/* Stats */}
       <div className="stats-grid">
-        <Link href="/questions" className="stat-card">
+        <Link href="/questions" className="stat-card clickable">
           <div className="stat-value">{totalQuestions}</div>
           <div className="stat-label">Вопросов</div>
         </Link>
-        <div className="stat-card">
+        <a href="#topics-section" className="stat-card clickable">
           <div className="stat-value">{totalGroups}</div>
           <div className="stat-label">Тем</div>
-        </div>
-        <div className="stat-card">
+        </a>
+        <a href="#sources-section" className="stat-card clickable">
           <div className="stat-value">{totalSources}</div>
           <div className="stat-label">Источников</div>
-        </div>
+        </a>
       </div>
 
       {/* Difficulty Distribution */}
@@ -158,7 +158,7 @@ export default function Dashboard() {
       </div>
 
       {/* Topics */}
-      <div className="card" style={{ marginBottom: '24px' }}>
+      <div id="topics-section" className="card" style={{ marginBottom: '24px' }}>
         <div className="card-header">
           <h2>По темам</h2>
         </div>
@@ -183,7 +183,7 @@ export default function Dashboard() {
       </div>
 
       {/* Sources */}
-      <div className="card">
+      <div id="sources-section" className="card">
         <div className="card-header">
           <h2>По источникам</h2>
         </div>

@@ -52,6 +52,7 @@
 html, body {
     overscroll-behavior: none;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 body {
